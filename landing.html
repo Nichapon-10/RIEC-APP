@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>หมอข้าว — ตรวจโรคใบข้าวด้วย AI</title>
+<meta name="description" content="ถ่ายรูปใบข้าวด้วยมือถือ แล้วให้ AI ช่วยคัดกรองโรคเบื้องต้นได้ในไม่กี่วินาที">
+<meta name="theme-color" content="#1d5e2a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@600;700&family=Noto+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --font-display:'Noto Serif Thai','Loma',Georgia,serif;
+  --font-body:'Noto Sans Thai','Loma',system-ui,sans-serif;
+  --pad:clamp(20px,5.6vw,64px);
+  --white:#fff; --muted:rgba(255,255,255,.80); --heading:rgba(255,255,255,.92);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#2f7a3a}
+body{font-family:var(--font-body);color:var(--white);-webkit-font-smoothing:antialiased;min-height:100dvh}
+.viewport{position:relative;min-height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+.bg{position:fixed;inset:0;z-index:0;background:#2f7a3a}
+.scene{position:absolute;inset:0;width:100%;height:100%}
+.bg video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .8s}
+.bg video.ready{opacity:1}
+.scrim{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(90deg,rgba(5,30,16,.62) 0,rgba(5,30,16,.34) 45%,rgba(5,30,16,0) 75%)}
+.stage{position:relative;z-index:2;padding:clamp(28px,7vh,88px) var(--pad) 40px;flex:1;display:flex;flex-direction:column;justify-content:center}
+.brandtop{display:flex;align-items:center;gap:10px;margin-bottom:clamp(28px,6vh,64px);font-family:var(--font-display);font-weight:700;font-size:clamp(20px,2.4vw,26px)}
+.mark{width:30px;height:30px;flex:none}
+.eyebrow{font-weight:500;font-size:clamp(14px,3.3vw,17px);color:#ffe9a0;margin-bottom:14px}
+h1{font-family:var(--font-display);font-weight:700;font-size:clamp(30px,8vw,72px);line-height:1.28;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.lede{margin-top:20px;max-width:34em;font-weight:500;font-size:clamp(16px,4vw,20px);line-height:1.75;color:var(--white);text-shadow:0 1px 12px rgba(0,0,0,.3)}
+.cta{display:inline-flex;align-items:center;gap:10px;margin-top:30px;min-height:54px;padding:0 30px;background:#fff;color:#12391c;border-radius:10px;
+  font-weight:600;font-size:clamp(17px,4.2vw,19px);text-decoration:none;transition:background .25s,transform .25s,box-shadow .25s;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.cta:hover,.cta:focus-visible{background:#f3f8e8;transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,.25)}
+.cta:focus-visible{outline:3px solid #ffe9a0;outline-offset:3px}
+.cta svg{width:20px;height:20px}
+.hint{margin-top:14px;font-size:14px;color:var(--muted)}
+footer{position:relative;z-index:2;padding:clamp(24px,3.4vh,40px) var(--pad) calc(clamp(20px,3vh,34px) + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg,rgba(8,34,18,.55),rgba(10,40,20,.68));
+  -webkit-backdrop-filter:blur(22px) saturate(.95);backdrop-filter:blur(22px) saturate(.95);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
+.fgrid{display:grid;grid-template-columns:1fr;gap:22px}
+.fgrid h2{font-family:var(--font-display);font-weight:600;font-size:17px;color:var(--heading);margin-bottom:8px}
+.fgrid ul{list-style:none}
+.fgrid li{font-size:15px;line-height:1.85;color:#fff}
+.note{margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.35);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px}
+.note p{font-size:14px;line-height:1.7;color:var(--muted);max-width:60ch}
+.gh{display:inline-flex;align-items:center;gap:8px;color:#fff;text-decoration:none;font-size:14px;min-height:44px}
+.gh:hover{opacity:.7}.gh svg{width:24px;height:24px}
+@media(min-width:720px){
+  .fgrid{grid-template-columns:repeat(3,1fr);gap:40px}
+  .stage{padding-top:clamp(28px,6vh,72px)}
+}
+@media(min-width:1100px){
+  .stage{justify-content:center;padding-bottom:60px}
+}
+/* entrance */
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.in{animation:rise .7s cubic-bezier(.22,.65,.28,1) both}
+.d1{animation-delay:.05s}.d2{animation-delay:.18s}.d3{animation-delay:.34s}.d4{animation-delay:.5s}.d5{animation-delay:.62s}
+@keyframes sway{0%,100%{transform:translateX(0)}50%{transform:translateX(7px)}}
+.sway{animation:sway 6s ease-in-out infinite}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="viewport">
+  <div class="bg">
+    <svg class="scene" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#2c6e7f"/><stop offset=".45" stop-color="#8fc4b0"/><stop offset=".8" stop-color="#f3dc9b"/><stop offset="1" stop-color="#f7c978"/></linearGradient>
+<radialGradient id="sun" cx="1150" cy="470" r="330" gradientUnits="userSpaceOnUse">
+<stop offset="0" stop-color="#fff6cf" stop-opacity=".95"/><stop offset=".25" stop-color="#ffe9a0" stop-opacity=".6"/><stop offset="1" stop-color="#ffe9a0" stop-opacity="0"/></radialGradient>
+<linearGradient id="field" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#c9d86a"/><stop offset=".25" stop-color="#7fb53f"/><stop offset=".7" stop-color="#3c8a34"/><stop offset="1" stop-color="#1d5e2a"/></linearGradient>
+<linearGradient id="haze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2c4" stop-opacity="0"/><stop offset=".5" stop-color="#fff2c4" stop-opacity=".55"/><stop offset="1" stop-color="#fff2c4" stop-opacity="0"/></linearGradient>
+</defs>
+<rect width="1600" height="900" fill="url(#sky)"/>
+<rect width="1600" height="900" fill="url(#sun)"/>
+<circle cx="1150" cy="470" r="46" fill="#fffbe6"/>
+<path d="M0 470 L120 410 L230 455 L380 380 L520 450 L640 420 L800 470 L960 405 L1100 460 L1250 400 L1400 455 L1600 415 L1600 530 L0 530Z" fill="#6c9d8c" opacity=".55"/>
+<path d="M0 500 L150 455 L290 490 L430 450 L600 495 L780 465 L940 495 L1120 458 L1290 492 L1450 462 L1600 490 L1600 530 L0 530Z" fill="#4e8a6c" opacity=".8"/>
+<g fill="#2f6b45" opacity=".9"><path d="M40 520 q-2 -54 0 -54 q2 0 0 54z" /><ellipse cx="40" cy="466" rx="11" ry="7" />
+<path d="M135 520 q-2 -47 0 -47 q2 0 0 47z" /><ellipse cx="135" cy="473" rx="16" ry="7" />
+<path d="M230 520 q-2 -40 0 -40 q2 0 0 40z" /><ellipse cx="230" cy="480" rx="14" ry="7" />
+<path d="M325 520 q-2 -57 0 -57 q2 0 0 57z" /><ellipse cx="325" cy="463" rx="12" ry="7" />
+<path d="M420 520 q-2 -50 0 -50 q2 0 0 50z" /><ellipse cx="420" cy="470" rx="10" ry="7" />
+<path d="M515 520 q-2 -43 0 -43 q2 0 0 43z" /><ellipse cx="515" cy="477" rx="15" ry="7" />
+<path d="M610 520 q-2 -60 0 -60 q2 0 0 60z" /><ellipse cx="610" cy="460" rx="13" ry="7" />
+<path d="M705 520 q-2 -53 0 -53 q2 0 0 53z" /><ellipse cx="705" cy="467" rx="11" ry="7" />
+<path d="M800 520 q-2 -46 0 -46 q2 0 0 46z" /><ellipse cx="800" cy="474" rx="16" ry="7" />
+<path d="M895 520 q-2 -39 0 -39 q2 0 0 39z" /><ellipse cx="895" cy="481" rx="14" ry="7" />
+<path d="M990 520 q-2 -56 0 -56 q2 0 0 56z" /><ellipse cx="990" cy="464" rx="12" ry="7" />
+<path d="M1085 520 q-2 -49 0 -49 q2 0 0 49z" /><ellipse cx="1085" cy="471" rx="10" ry="7" />
+<path d="M1180 520 q-2 -42 0 -42 q2 0 0 42z" /><ellipse cx="1180" cy="478" rx="15" ry="7" />
+<path d="M1275 520 q-2 -59 0 -59 q2 0 0 59z" /><ellipse cx="1275" cy="461" rx="13" ry="7" />
+<path d="M1370 520 q-2 -52 0 -52 q2 0 0 52z" /><ellipse cx="1370" cy="468" rx="11" ry="7" />
+<path d="M1465 520 q-2 -45 0 -45 q2 0 0 45z" /><ellipse cx="1465" cy="475" rx="16" ry="7" />
+<path d="M1560 520 q-2 -38 0 -38 q2 0 0 38z" /><ellipse cx="1560" cy="482" rx="14" ry="7" /></g>
+<rect y="520" width="1600" height="380" fill="url(#field)"/>
+<rect y="440" width="1600" height="150" fill="url(#haze)"/>
+<g fill="#ffffff" opacity=".10"><rect x="0" y="520.0" width="1600" height="3.0" />
+<rect x="0" y="527.7" width="1600" height="3.8" />
+<rect x="0" y="537.5" width="1600" height="4.9" />
+<rect x="0" y="550.1" width="1600" height="6.3" />
+<rect x="0" y="566.2" width="1600" height="8.1" />
+<rect x="0" y="586.8" width="1600" height="10.3" />
+<rect x="0" y="613.2" width="1600" height="13.2" />
+<rect x="0" y="647.0" width="1600" height="16.9" />
+<rect x="0" y="690.2" width="1600" height="21.6" />
+<rect x="0" y="745.6" width="1600" height="27.7" />
+<rect x="0" y="816.4" width="1600" height="35.4" /></g>
+<g stroke="#0e3d1c" stroke-opacity=".22" stroke-width="2"><line x1="800" y1="520" x2="-3100" y2="900" />
+<line x1="800" y1="520" x2="-2950" y2="900" />
+<line x1="800" y1="520" x2="-2800" y2="900" />
+<line x1="800" y1="520" x2="-2650" y2="900" />
+<line x1="800" y1="520" x2="-2500" y2="900" />
+<line x1="800" y1="520" x2="-2350" y2="900" />
+<line x1="800" y1="520" x2="-2200" y2="900" />
+<line x1="800" y1="520" x2="-2050" y2="900" />
+<line x1="800" y1="520" x2="-1900" y2="900" />
+<line x1="800" y1="520" x2="-1750" y2="900" />
+<line x1="800" y1="520" x2="-1600" y2="900" />
+<line x1="800" y1="520" x2="-1450" y2="900" />
+<line x1="800" y1="520" x2="-1300" y2="900" />
+<line x1="800" y1="520" x2="-1150" y2="900" />
+<line x1="800" y1="520" x2="-1000" y2="900" />
+<line x1="800" y1="520" x2="-850" y2="900" />
+<line x1="800" y1="520" x2="-700" y2="900" />
+<line x1="800" y1="520" x2="-550" y2="900" />
+<line x1="800" y1="520" x2="-400" y2="900" />
+<line x1="800" y1="520" x2="-250" y2="900" />
+<line x1="800" y1="520" x2="-100" y2="900" />
+<line x1="800" y1="520" x2="50" y2="900" />
+<line x1="800" y1="520" x2="200" y2="900" />
+<line x1="800" y1="520" x2="350" y2="900" />
+<line x1="800" y1="520" x2="500" y2="900" />
+<line x1="800" y1="520" x2="650" y2="900" />
+<line x1="800" y1="520" x2="800" y2="900" />
+<line x1="800" y1="520" x2="950" y2="900" />
+<line x1="800" y1="520" x2="1100" y2="900" />
+<line x1="800" y1="520" x2="1250" y2="900" />
+<line x1="800" y1="520" x2="1400" y2="900" />
+<line x1="800" y1="520" x2="1550" y2="900" />
+<line x1="800" y1="520" x2="1700" y2="900" />
+<line x1="800" y1="520" x2="1850" y2="900" />
+<line x1="800" y1="520" x2="2000" y2="900" />
+<line x1="800" y1="520" x2="2150" y2="900" />
+<line x1="800" y1="520" x2="2300" y2="900" />
+<line x1="800" y1="520" x2="2450" y2="900" />
+<line x1="800" y1="520" x2="2600" y2="900" />
+<line x1="800" y1="520" x2="2750" y2="900" />
+<line x1="800" y1="520" x2="2900" y2="900" />
+<line x1="800" y1="520" x2="3050" y2="900" />
+<line x1="800" y1="520" x2="3200" y2="900" />
+<line x1="800" y1="520" x2="3350" y2="900" />
+<line x1="800" y1="520" x2="3500" y2="900" />
+<line x1="800" y1="520" x2="3650" y2="900" />
+<line x1="800" y1="520" x2="3800" y2="900" />
+<line x1="800" y1="520" x2="3950" y2="900" />
+<line x1="800" y1="520" x2="4100" y2="900" />
+<line x1="800" y1="520" x2="4250" y2="900" />
+<line x1="800" y1="520" x2="4400" y2="900" />
+<line x1="800" y1="520" x2="4550" y2="900" />
+<line x1="800" y1="520" x2="4700" y2="900" /></g>
+<g class="sway" stroke="#e9f5a8" stroke-opacity=".35" stroke-width="2" stroke-linecap="round">
+<path d="M10 900 q-6 -34 -14 -66"/><path d="M70 900 q6 -34 14 -66"/><path d="M130 900 q-6 -34 -14 -66"/><path d="M190 900 q6 -34 14 -66"/><path d="M250 900 q-6 -34 -14 -66"/><path d="M310 900 q6 -34 14 -66"/><path d="M370 900 q-6 -34 -14 -66"/><path d="M430 900 q6 -34 14 -66"/><path d="M490 900 q-6 -34 -14 -66"/><path d="M550 900 q6 -34 14 -66"/><path d="M610 900 q-6 -34 -14 -66"/><path d="M670 900 q6 -34 14 -66"/><path d="M730 900 q-6 -34 -14 -66"/><path d="M790 900 q6 -34 14 -66"/><path d="M850 900 q-6 -34 -14 -66"/><path d="M910 900 q6 -34 14 -66"/><path d="M970 900 q-6 -34 -14 -66"/><path d="M1030 900 q6 -34 14 -66"/><path d="M1090 900 q-6 -34 -14 -66"/><path d="M1150 900 q6 -34 14 -66"/><path d="M1210 900 q-6 -34 -14 -66"/><path d="M1270 900 q6 -34 14 -66"/><path d="M1330 900 q-6 -34 -14 -66"/><path d="M1390 900 q6 -34 14 -66"/><path d="M1450 900 q-6 -34 -14 -66"/><path d="M1510 900 q6 -34 14 -66"/><path d="M1570 900 q-6 -34 -14 -66"/>
+</g>
+</svg>
+    <!-- ใส่วิดีโอจริงที่ assets/rice.mp4 และภาพ assets/rice.jpg (ไม่มีไฟล์ก็ไม่เป็นไร จะใช้ภาพวาดด้านล่างแทน) -->
+    <video id="bgv" autoplay muted loop playsinline preload="metadata" poster="assets/rice.jpg" aria-label="นาข้าวเขียวชอุ่มยามเช้า">
+      <source src="assets/rice.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="scrim"></div>
+
+  <main class="stage">
+    <div class="brandtop in d1">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><path fill="#ffe9a0" d="M16 2c7 5 10 11 10 17 0 5-4 9-10 11C10 28 6 24 6 19 6 13 9 7 16 2Z"/><path d="M16 8v20M16 15l-5-4M16 20l5-4" stroke="#1d5e2a" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>
+      <span>หมอข้าว</span>
+    </div>
+    <p class="eyebrow in d2">ตรวจโรคใบข้าวด้วย AI</p>
+    <h1 class="in d3">ถ่ายรูปใบข้าว<br>รู้ทันโรคในไม่กี่วินาที</h1>
+    <p class="lede in d4">ใช้มือถือถ่ายรูปใบข้าว แล้วระบบจะช่วยคัดกรองว่าเป็นโรคขอบใบแห้ง โรคใบจุดสีน้ำตาล โรคไหม้ หรือใบปกติ พร้อมบอกระดับความมั่นใจ</p>
+    <div class="in d5">
+      <a class="cta" id="cta" href="#" rel="noopener">เริ่มตรวจโรค
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <p class="hint">เปิดกล้องมือถือหรืออัปโหลดรูปได้ ไม่ต้องสมัครสมาชิก</p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="fgrid">
+      <section><h2>โรคที่ตรวจได้</h2><ul>
+        <li>โรคขอบใบแห้ง</li><li>โรคใบจุดสีน้ำตาล</li><li>โรคไหม้</li><li>ใบข้าวปกติ</li></ul></section>
+      <section><h2>ถ่ายรูปอย่างไรให้แม่น</h2><ul>
+        <li>ถ่ายในที่ที่มีแสงสว่างเพียงพอ</li><li>ให้ใบอยู่เต็มกรอบและชัด</li><li>ใช้พื้นหลังเรียบ ไม่รก</li><li>ถ่ายใบเดียวต่อหนึ่งรูป</li></ul></section>
+      <section><h2>ข้อควรรู้</h2><ul>
+        <li>ใช้คัดกรองเบื้องต้นเท่านั้น</li><li>ตรวจได้เฉพาะ 4 กลุ่มข้างต้น</li><li>ความแม่นยำราว 94% จากการทดสอบ</li><li>ควรปรึกษาเจ้าหน้าที่เกษตรเสมอ</li></ul></section>
+    </div>
+    <div class="note">
+      <p>© 2569 หมอข้าว · โครงงานเพื่อการศึกษา ผลลัพธ์ไม่ใช่การวินิจฉัยโดยผู้เชี่ยวชาญ</p>
+      <a class="gh" id="gh" href="#" aria-label="ดูโค้ดบน GitHub">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg>
+        โค้ดบน GitHub</a>
+    </div>
+  </footer>
+</div>
+<script>
+/* ===== แก้ 2 บรรทัดนี้ก่อนใช้งานจริง ===== */
+var APP_URL="#";   // ลิงก์แอป Streamlit เช่น https://xxxx.streamlit.app
+var GITHUB_URL="#";// ลิงก์ GitHub repo ของโปรเจกต์
+document.getElementById('cta').href=APP_URL;
+document.getElementById('gh').href=GITHUB_URL;
+var v=document.getElementById('bgv');
+v.addEventListener('canplay',function(){v.classList.add('ready')});
+v.addEventListener('error',function(){v.remove()},true);
+</script>
+</body>
+</html>
