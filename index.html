@@ -13,8 +13,10 @@
 :root{
   --font-display:'Noto Serif Thai','Loma',Georgia,serif;
   --font-body:'Noto Sans Thai','Loma',system-ui,sans-serif;
-  --pad:clamp(20px,5.6vw,64px);
-  --white:#fff; --muted:rgba(255,255,255,.80); --heading:rgba(255,255,255,.92);
+  --pad:clamp(20px,5.6vw,72px);
+  --gold:#ffe9a0;
+  --white:#fff; --muted:rgba(255,255,255,.82); --heading:rgba(255,255,255,.92);
+  --glass:linear-gradient(180deg,rgba(8,34,18,.56),rgba(10,40,20,.72));
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:#2f7a3a}
@@ -25,63 +27,87 @@ body{font-family:var(--font-body);color:var(--white);-webkit-font-smoothing:anti
 .bg video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .8s}
 .bg video.ready{opacity:1}
 .scrim{position:fixed;inset:0;z-index:1;pointer-events:none;
-  background:linear-gradient(90deg,rgba(5,30,16,.62) 0,rgba(5,30,16,.34) 45%,rgba(5,30,16,0) 75%)}
-.stage{position:relative;z-index:2;padding:clamp(28px,7vh,88px) var(--pad) 40px;flex:1;display:flex;flex-direction:column;justify-content:center}
+  background:
+    linear-gradient(180deg,rgba(5,30,16,.42) 0,rgba(5,30,16,0) 24%),
+    linear-gradient(90deg,rgba(5,30,16,.66) 0,rgba(5,30,16,.36) 46%,rgba(5,30,16,0) 78%)}
 
-/* โลโก้มหาวิทยาลัย / คณะ */
-.logos{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:clamp(20px,4vh,36px)}
-.logos img{height:clamp(46px,9vw,68px);width:auto;max-width:42vw;object-fit:contain;background:rgba(255,255,255,.94);border-radius:12px;padding:6px 8px;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+/* ===== แถบหัวเว็บ: โลโก้มหาวิทยาลัย + สาขา ===== */
+.top{position:relative;z-index:2;padding:clamp(16px,3vh,28px) var(--pad) 0}
+.topbar{display:inline-flex;align-items:center;gap:clamp(10px,2vw,16px);max-width:100%;
+  padding:7px clamp(14px,2.4vw,24px) 7px 7px;border-radius:999px;
+  background:rgba(8,34,18,.46);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.24);box-shadow:0 8px 26px rgba(0,0,0,.16)}
+.logos{display:flex;align-items:center;gap:8px;flex:none}
+.lg{width:clamp(44px,8.5vw,60px);height:clamp(44px,8.5vw,60px);border-radius:50%;background:#fff;display:grid;place-items:center;overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,.22),0 0 0 2px rgba(255,233,160,.55)}
+.lg img{width:84%;height:84%;object-fit:contain;display:block}
+.org{line-height:1.4;min-width:0}
+.org b{display:block;font-family:var(--font-display);font-weight:700;font-size:clamp(13px,3.5vw,17px);color:#fff}
+.org span{display:block;font-size:clamp(11px,2.9vw,13px);color:var(--muted)}
 
-.brandtop{display:flex;align-items:center;gap:10px;margin-bottom:clamp(28px,6vh,64px);font-family:var(--font-display);font-weight:700;font-size:clamp(20px,2.4vw,26px)}
+/* ===== ส่วนหลัก ===== */
+.stage{position:relative;z-index:2;padding:clamp(28px,6vh,68px) var(--pad) clamp(36px,6vh,64px);flex:1;display:flex;align-items:center}
+.hero{width:100%;display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(32px,6vh,48px);align-items:center}
+.brandtop{display:flex;align-items:center;gap:10px;margin-bottom:clamp(18px,3.4vh,30px);font-family:var(--font-display);font-weight:700;font-size:clamp(20px,2.4vw,26px)}
 .mark{width:30px;height:30px;flex:none}
-.eyebrow{font-weight:500;font-size:clamp(14px,3.3vw,17px);color:#ffe9a0;margin-bottom:14px}
-h1{font-family:var(--font-display);font-weight:700;font-size:clamp(30px,8vw,72px);line-height:1.28;text-shadow:0 2px 24px rgba(0,0,0,.25)}
-.lede{margin-top:20px;max-width:34em;font-weight:500;font-size:clamp(16px,4vw,20px);line-height:1.75;color:var(--white);text-shadow:0 1px 12px rgba(0,0,0,.3)}
-.cta{display:inline-flex;align-items:center;gap:10px;margin-top:30px;min-height:54px;padding:0 30px;background:#fff;color:#12391c;border-radius:10px;
-  font-weight:600;font-size:clamp(17px,4.2vw,19px);text-decoration:none;transition:background .25s,transform .25s,box-shadow .25s;box-shadow:0 6px 20px rgba(0,0,0,.18)}
-.cta:hover,.cta:focus-visible{background:#f3f8e8;transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,.25)}
-.cta:focus-visible{outline:3px solid #ffe9a0;outline-offset:3px}
+.eyebrow{display:inline-block;font-weight:500;font-size:clamp(13px,3.2vw,16px);color:var(--gold);margin-bottom:14px;padding:5px 14px;border-radius:999px;background:rgba(255,233,160,.14);border:1px solid rgba(255,233,160,.4)}
+h1{font-family:var(--font-display);font-weight:700;font-size:clamp(30px,7.4vw,66px);line-height:1.28;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.lede{margin-top:20px;max-width:33em;font-weight:500;font-size:clamp(16px,4vw,19px);line-height:1.8;color:var(--white);text-shadow:0 1px 12px rgba(0,0,0,.3)}
+.actions{margin-top:30px}
+.cta{display:inline-flex;align-items:center;gap:10px;min-height:56px;padding:0 32px;background:#fff;color:#12391c;border-radius:12px;
+  font-weight:600;font-size:clamp(17px,4.2vw,19px);text-decoration:none;transition:background .25s,transform .25s,box-shadow .25s;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.cta:hover,.cta:focus-visible{background:#f3f8e8;transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.28)}
+.cta:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 .cta svg{width:20px;height:20px}
 .hint{margin-top:14px;font-size:14px;color:var(--muted)}
 
-/* ส่วนผู้พัฒนา */
-.dev{position:relative;z-index:2;padding:0 var(--pad) clamp(28px,5vh,48px)}
-.devcard{display:flex;align-items:center;gap:clamp(16px,3vw,28px);flex-wrap:wrap;max-width:820px;padding:clamp(16px,3vw,24px);border-radius:18px;
-  background:linear-gradient(180deg,rgba(8,34,18,.58),rgba(10,40,20,.72));
-  -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
-  border:1px solid rgba(255,255,255,.22);box-shadow:0 10px 30px rgba(0,0,0,.2)}
-.photo{position:relative;width:clamp(96px,22vw,132px);height:clamp(96px,22vw,132px);border-radius:50%;overflow:hidden;flex:none;
-  border:3px solid #ffe9a0;background:#1d5e2a;display:grid;place-items:center}
+/* ===== การ์ดผู้พัฒนา ===== */
+.devcard{width:100%;max-width:440px;padding:clamp(20px,3vw,28px);border-radius:24px;background:var(--glass);
+  -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.26);box-shadow:0 18px 44px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.18)}
+.devhead{display:flex;align-items:center;gap:18px}
+.photo{position:relative;width:clamp(92px,24vw,112px);height:clamp(92px,24vw,112px);border-radius:50%;overflow:hidden;flex:none;
+  border:3px solid var(--gold);box-shadow:0 0 0 7px rgba(255,233,160,.16);background:#1d5e2a;display:grid;place-items:center}
 .photo svg{width:56%;height:56%;opacity:.55}
-.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.devtext{flex:1;min-width:220px}
-.devtext .tag{font-size:14px;color:#ffe9a0;font-weight:500;margin-bottom:6px}
-.devtext h2{font-family:var(--font-display);font-weight:700;font-size:clamp(20px,5vw,26px);line-height:1.35;color:#fff}
-.devtext p{margin-top:6px;font-size:15px;line-height:1.75;color:var(--muted)}
-.btn2{display:inline-flex;align-items:center;gap:10px;margin-top:16px;min-height:48px;padding:0 22px;border:2px solid #ffe9a0;color:#ffe9a0;border-radius:10px;
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 28%}
+.devtext .tag{font-size:13px;letter-spacing:.02em;color:var(--gold);font-weight:600;margin-bottom:4px}
+.devtext h2{font-family:var(--font-display);font-weight:700;font-size:clamp(19px,4.8vw,23px);line-height:1.35;color:#fff}
+.devinfo{margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.22);font-size:14.5px;line-height:1.8;color:var(--muted)}
+.devinfo b{color:#fff;font-weight:600}
+.btn2{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:18px;min-height:50px;padding:0 22px;border:2px solid var(--gold);color:var(--gold);border-radius:12px;
   font-weight:600;font-size:16px;text-decoration:none;transition:background .25s,color .25s,transform .25s}
-.btn2:hover,.btn2:focus-visible{background:#ffe9a0;color:#12391c;transform:translateY(-2px)}
+.btn2:hover,.btn2:focus-visible{background:var(--gold);color:#12391c;transform:translateY(-2px)}
 .btn2:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .btn2 svg{width:20px;height:20px}
 
+/* ===== ส่วนท้าย ===== */
 footer{position:relative;z-index:2;padding:clamp(24px,3.4vh,40px) var(--pad) calc(clamp(20px,3vh,34px) + env(safe-area-inset-bottom));
-  background:linear-gradient(180deg,rgba(8,34,18,.55),rgba(10,40,20,.68));
+  background:linear-gradient(180deg,rgba(8,34,18,.55),rgba(10,40,20,.7));
   -webkit-backdrop-filter:blur(22px) saturate(.95);backdrop-filter:blur(22px) saturate(.95);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
 .fgrid{display:grid;grid-template-columns:1fr;gap:22px}
 .fgrid h2{font-family:var(--font-display);font-weight:600;font-size:17px;color:var(--heading);margin-bottom:8px}
 .fgrid ul{list-style:none}
-.fgrid li{font-size:15px;line-height:1.85;color:#fff}
-.note{margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.35);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px}
+.fgrid li{font-size:15px;line-height:1.85;color:#fff;padding-left:16px;position:relative}
+.fgrid li::before{content:"";position:absolute;left:0;top:.82em;width:6px;height:6px;border-radius:50%;background:var(--gold);opacity:.85}
+.note{margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.3);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px}
 .note p{font-size:14px;line-height:1.7;color:var(--muted);max-width:60ch}
 .gh{display:inline-flex;align-items:center;gap:8px;color:#fff;text-decoration:none;font-size:14px;min-height:44px}
 .gh:hover{opacity:.7}.gh svg{width:24px;height:24px}
+
 @media(min-width:720px){
   .fgrid{grid-template-columns:repeat(3,1fr);gap:40px}
-  .stage{padding-top:clamp(28px,6vh,72px)}
 }
-@media(min-width:1100px){
-  .stage{justify-content:center;padding-bottom:60px}
+@media(min-width:960px){
+  .hero{grid-template-columns:minmax(0,1fr) 400px;gap:56px}
+  .devcard{justify-self:end}
+}
+@media(min-width:1280px){
+  .hero{grid-template-columns:minmax(0,1fr) 430px;gap:80px}
+}
+@media(max-width:420px){
+  .org span{display:none}
+  .devhead{gap:14px}
 }
 /* entrance */
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
@@ -95,7 +121,7 @@ footer{position:relative;z-index:2;padding:clamp(24px,3.4vh,40px) var(--pad) cal
 <body>
 <div class="viewport">
   <div class="bg">
-    <svg class="scene" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+<svg class="scene" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
 <defs>
 <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
 <stop offset="0" stop-color="#2c6e7f"/><stop offset=".45" stop-color="#8fc4b0"/><stop offset=".8" stop-color="#f3dc9b"/><stop offset="1" stop-color="#f7c978"/></linearGradient>
@@ -197,54 +223,65 @@ footer{position:relative;z-index:2;padding:clamp(24px,3.4vh,40px) var(--pad) cal
 <path d="M10 900 q-6 -34 -14 -66"/><path d="M70 900 q6 -34 14 -66"/><path d="M130 900 q-6 -34 -14 -66"/><path d="M190 900 q6 -34 14 -66"/><path d="M250 900 q-6 -34 -14 -66"/><path d="M310 900 q6 -34 14 -66"/><path d="M370 900 q-6 -34 -14 -66"/><path d="M430 900 q6 -34 14 -66"/><path d="M490 900 q-6 -34 -14 -66"/><path d="M550 900 q6 -34 14 -66"/><path d="M610 900 q-6 -34 -14 -66"/><path d="M670 900 q6 -34 14 -66"/><path d="M730 900 q-6 -34 -14 -66"/><path d="M790 900 q6 -34 14 -66"/><path d="M850 900 q-6 -34 -14 -66"/><path d="M910 900 q6 -34 14 -66"/><path d="M970 900 q-6 -34 -14 -66"/><path d="M1030 900 q6 -34 14 -66"/><path d="M1090 900 q-6 -34 -14 -66"/><path d="M1150 900 q6 -34 14 -66"/><path d="M1210 900 q-6 -34 -14 -66"/><path d="M1270 900 q6 -34 14 -66"/><path d="M1330 900 q-6 -34 -14 -66"/><path d="M1390 900 q6 -34 14 -66"/><path d="M1450 900 q-6 -34 -14 -66"/><path d="M1510 900 q6 -34 14 -66"/><path d="M1570 900 q-6 -34 -14 -66"/>
 </g>
 </svg>
-    <!-- ใส่วิดีโอจริงที่ assets/rice.mp4 และภาพ assets/rice.jpg (ไม่มีไฟล์ก็ไม่เป็นไร จะใช้ภาพวาดด้านล่างแทน) -->
+    <!-- ใส่วิดีโอจริงที่ assets/rice.mp4 และภาพ assets/rice.jpg (ไม่มีไฟล์ก็ไม่เป็นไร จะใช้ภาพวาดด้านบนแทน) -->
     <video id="bgv" autoplay muted loop playsinline preload="metadata" poster="assets/rice.jpg" aria-label="นาข้าวเขียวชอุ่มยามเช้า">
       <source src="assets/rice.mp4" type="video/mp4">
     </video>
   </div>
   <div class="scrim"></div>
 
-  <main class="stage">
-
-    <!-- โลโก้มหาวิทยาลัยและสาขา: วางไฟล์ไว้ที่ assets/logo-university.png และ assets/logo-cs.png -->
-    <div class="logos in d0">
-      <img data-base="assets/logo-university" alt="ตราสัญลักษณ์มหาวิทยาลัยราชภัฏนครปฐม">
-      <img data-base="assets/logo-cs" alt="โลโก้สาขาวิทยาการคอมพิวเตอร์ มหาวิทยาลัยราชภัฏนครปฐม">
-    </div>
-
-    <div class="brandtop in d1">
-      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><path fill="#ffe9a0" d="M16 2c7 5 10 11 10 17 0 5-4 9-10 11C10 28 6 24 6 19 6 13 9 7 16 2Z"/><path d="M16 8v20M16 15l-5-4M16 20l5-4" stroke="#1d5e2a" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>
-      <span>หมอข้าว</span>
-    </div>
-    <p class="eyebrow in d2">ตรวจโรคใบข้าวด้วย AI</p>
-    <h1 class="in d3">ถ่ายรูปใบข้าว<br>รู้ทันโรคในไม่กี่วินาที</h1>
-    <p class="lede in d4">ใช้มือถือถ่ายรูปใบข้าว แล้วระบบจะช่วยคัดกรองว่าเป็นโรคขอบใบแห้ง โรคใบจุดสีน้ำตาล โรคไหม้ หรือใบปกติ พร้อมบอกระดับความมั่นใจ</p>
-    <div class="in d5">
-      <a class="cta" id="cta" href="#" rel="noopener">เริ่มตรวจโรค
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </a>
-      <p class="hint">เปิดกล้องมือถือหรืออัปโหลดรูปได้ ไม่ต้องสมัครสมาชิก</p>
-    </div>
-  </main>
-
-  <!-- ส่วนผู้พัฒนา: รูปที่ assets/me.jpg -->
-  <section class="dev in d6" aria-label="ผู้พัฒนา">
-    <div class="devcard">
-      <div class="photo">
-        <svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 21c0-4.6 3.8-7.5 8.5-7.5s8.5 2.9 8.5 7.5z"/></svg>
-        <img src="assets/me.jpg" alt="นายณิชพน ธนวัตณัชกุล ผู้พัฒนา" onerror="this.remove()">
+  <!-- แถบหัวเว็บ: โลโก้อยู่ที่ assets/logo-university.* และ assets/logo-cs.* -->
+  <header class="top in d0">
+    <div class="topbar">
+      <div class="logos">
+        <span class="lg"><img data-base="assets/logo-university" alt="ตราสัญลักษณ์มหาวิทยาลัยราชภัฏนครปฐม"></span>
+        <span class="lg"><img data-base="assets/logo-cs" alt="โลโก้สาขาวิทยาการคอมพิวเตอร์"></span>
       </div>
-      <div class="devtext">
-        <p class="tag">ผู้พัฒนา</p>
-        <h2>นายณิชพน ธนวัตณัชกุล</h2>
-        <p>สาขาวิทยาการคอมพิวเตอร์ คณะวิทยาศาสตร์และเทคโนโลยี<br>มหาวิทยาลัยราชภัฏนครปฐม</p>
+      <div class="org">
+        <b>มหาวิทยาลัยราชภัฏนครปฐม</b>
+        <span>สาขาวิทยาการคอมพิวเตอร์ · คณะวิทยาศาสตร์และเทคโนโลยี</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="stage">
+    <div class="hero">
+      <div class="copy">
+        <div class="brandtop in d1">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><path fill="#ffe9a0" d="M16 2c7 5 10 11 10 17 0 5-4 9-10 11C10 28 6 24 6 19 6 13 9 7 16 2Z"/><path d="M16 8v20M16 15l-5-4M16 20l5-4" stroke="#1d5e2a" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>
+          <span>หมอข้าว</span>
+        </div>
+        <p class="eyebrow in d2">ตรวจโรคใบข้าวด้วย AI</p>
+        <h1 class="in d3">ถ่ายรูปใบข้าว<br>รู้ทันโรคในไม่กี่วินาที</h1>
+        <p class="lede in d4">ใช้มือถือถ่ายรูปใบข้าว แล้วระบบจะช่วยคัดกรองว่าเป็นโรคขอบใบแห้ง โรคใบจุดสีน้ำตาล โรคไหม้ หรือใบปกติ พร้อมบอกระดับความมั่นใจ</p>
+        <div class="actions in d5">
+          <a class="cta" id="cta" href="#" rel="noopener">เริ่มตรวจโรค
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <p class="hint">เปิดกล้องมือถือหรืออัปโหลดรูปได้ ไม่ต้องสมัครสมาชิก</p>
+        </div>
+      </div>
+
+      <!-- การ์ดผู้พัฒนา: รูปที่ assets/me.jpg -->
+      <aside class="devcard in d6" aria-label="ผู้พัฒนา">
+        <div class="devhead">
+          <div class="photo">
+            <svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 21c0-4.6 3.8-7.5 8.5-7.5s8.5 2.9 8.5 7.5z"/></svg>
+            <img src="assets/me.jpg" alt="นายณิชพน ธนวัตณัชกุล ผู้พัฒนา" onerror="this.remove()">
+          </div>
+          <div class="devtext">
+            <p class="tag">ผู้พัฒนา</p>
+            <h2>นายณิชพน<br>ธนวัตณัชกุล</h2>
+          </div>
+        </div>
+        <p class="devinfo"><b>สาขาวิทยาการคอมพิวเตอร์</b><br>คณะวิทยาศาสตร์และเทคโนโลยี<br>มหาวิทยาลัยราชภัฏนครปฐม</p>
         <a class="btn2" id="paper" href="#" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
           อ่านบทความวิจัย
         </a>
-      </div>
+      </aside>
     </div>
-  </section>
+  </main>
 
   <footer>
     <div class="fgrid">
@@ -273,12 +310,14 @@ document.getElementById('cta').href=APP_URL;
 document.getElementById('gh').href=GITHUB_URL;
 var paperBtn=document.getElementById('paper');
 if(PAPER_URL){paperBtn.href=PAPER_URL}else{paperBtn.style.display='none'}
-/* โลโก้: ลองนามสกุลไฟล์ให้อัตโนมัติ (jpg, jpeg, png, webp) ไม่เจอก็ซ่อนรูป */
-document.querySelectorAll('.logos img[data-base]').forEach(function(img){
+
+/* โลโก้: ลองนามสกุลไฟล์ให้อัตโนมัติ (jpg, jpeg, png, webp) ไม่เจอก็ซ่อนวงกลมนั้น */
+document.querySelectorAll('.lg img[data-base]').forEach(function(img){
   var exts=['jpg','jpeg','png','webp','JPG','JPEG','PNG'],i=0,base=img.getAttribute('data-base');
-  function next(){ if(i>=exts.length){img.remove();return} img.src=base+'.'+exts[i++]; }
+  function next(){ if(i>=exts.length){img.parentNode.remove();return} img.src=base+'.'+exts[i++]; }
   img.onerror=next; next();
 });
+
 var v=document.getElementById('bgv');
 v.addEventListener('canplay',function(){v.classList.add('ready')});
 v.addEventListener('error',function(){v.remove()},true);
