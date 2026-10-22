@@ -27,6 +27,11 @@ body{font-family:var(--font-body);color:var(--white);-webkit-font-smoothing:anti
 .scrim{position:fixed;inset:0;z-index:1;pointer-events:none;
   background:linear-gradient(90deg,rgba(5,30,16,.62) 0,rgba(5,30,16,.34) 45%,rgba(5,30,16,0) 75%)}
 .stage{position:relative;z-index:2;padding:clamp(28px,7vh,88px) var(--pad) 40px;flex:1;display:flex;flex-direction:column;justify-content:center}
+
+/* โลโก้มหาวิทยาลัย / คณะ */
+.logos{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:clamp(20px,4vh,36px)}
+.logos img{height:clamp(46px,9vw,68px);width:auto;max-width:42vw;object-fit:contain;background:rgba(255,255,255,.94);border-radius:12px;padding:6px 8px;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+
 .brandtop{display:flex;align-items:center;gap:10px;margin-bottom:clamp(28px,6vh,64px);font-family:var(--font-display);font-weight:700;font-size:clamp(20px,2.4vw,26px)}
 .mark{width:30px;height:30px;flex:none}
 .eyebrow{font-weight:500;font-size:clamp(14px,3.3vw,17px);color:#ffe9a0;margin-bottom:14px}
@@ -38,6 +43,27 @@ h1{font-family:var(--font-display);font-weight:700;font-size:clamp(30px,8vw,72px
 .cta:focus-visible{outline:3px solid #ffe9a0;outline-offset:3px}
 .cta svg{width:20px;height:20px}
 .hint{margin-top:14px;font-size:14px;color:var(--muted)}
+
+/* ส่วนผู้พัฒนา */
+.dev{position:relative;z-index:2;padding:0 var(--pad) clamp(28px,5vh,48px)}
+.devcard{display:flex;align-items:center;gap:clamp(16px,3vw,28px);flex-wrap:wrap;max-width:820px;padding:clamp(16px,3vw,24px);border-radius:18px;
+  background:linear-gradient(180deg,rgba(8,34,18,.58),rgba(10,40,20,.72));
+  -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,.22);box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.photo{position:relative;width:clamp(96px,22vw,132px);height:clamp(96px,22vw,132px);border-radius:50%;overflow:hidden;flex:none;
+  border:3px solid #ffe9a0;background:#1d5e2a;display:grid;place-items:center}
+.photo svg{width:56%;height:56%;opacity:.55}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.devtext{flex:1;min-width:220px}
+.devtext .tag{font-size:14px;color:#ffe9a0;font-weight:500;margin-bottom:6px}
+.devtext h2{font-family:var(--font-display);font-weight:700;font-size:clamp(20px,5vw,26px);line-height:1.35;color:#fff}
+.devtext p{margin-top:6px;font-size:15px;line-height:1.75;color:var(--muted)}
+.btn2{display:inline-flex;align-items:center;gap:10px;margin-top:16px;min-height:48px;padding:0 22px;border:2px solid #ffe9a0;color:#ffe9a0;border-radius:10px;
+  font-weight:600;font-size:16px;text-decoration:none;transition:background .25s,color .25s,transform .25s}
+.btn2:hover,.btn2:focus-visible{background:#ffe9a0;color:#12391c;transform:translateY(-2px)}
+.btn2:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.btn2 svg{width:20px;height:20px}
+
 footer{position:relative;z-index:2;padding:clamp(24px,3.4vh,40px) var(--pad) calc(clamp(20px,3vh,34px) + env(safe-area-inset-bottom));
   background:linear-gradient(180deg,rgba(8,34,18,.55),rgba(10,40,20,.68));
   -webkit-backdrop-filter:blur(22px) saturate(.95);backdrop-filter:blur(22px) saturate(.95);
@@ -60,7 +86,7 @@ footer{position:relative;z-index:2;padding:clamp(24px,3.4vh,40px) var(--pad) cal
 /* entrance */
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 .in{animation:rise .7s cubic-bezier(.22,.65,.28,1) both}
-.d1{animation-delay:.05s}.d2{animation-delay:.18s}.d3{animation-delay:.34s}.d4{animation-delay:.5s}.d5{animation-delay:.62s}
+.d0{animation-delay:0s}.d1{animation-delay:.05s}.d2{animation-delay:.18s}.d3{animation-delay:.34s}.d4{animation-delay:.5s}.d5{animation-delay:.62s}.d6{animation-delay:.74s}
 @keyframes sway{0%,100%{transform:translateX(0)}50%{transform:translateX(7px)}}
 .sway{animation:sway 6s ease-in-out infinite}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -179,6 +205,13 @@ footer{position:relative;z-index:2;padding:clamp(24px,3.4vh,40px) var(--pad) cal
   <div class="scrim"></div>
 
   <main class="stage">
+
+    <!-- โลโก้มหาวิทยาลัยและสาขา: วางไฟล์ไว้ที่ assets/logo-university.png และ assets/logo-cs.png -->
+    <div class="logos in d0">
+      <img src="assets/logo-university.png" alt="ตราสัญลักษณ์มหาวิทยาลัยราชภัฏนครปฐม" onerror="this.remove()">
+      <img src="assets/logo-cs.png" alt="โลโก้สาขาวิทยาการคอมพิวเตอร์ มหาวิทยาลัยราชภัฏนครปฐม" onerror="this.remove()">
+    </div>
+
     <div class="brandtop in d1">
       <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><path fill="#ffe9a0" d="M16 2c7 5 10 11 10 17 0 5-4 9-10 11C10 28 6 24 6 19 6 13 9 7 16 2Z"/><path d="M16 8v20M16 15l-5-4M16 20l5-4" stroke="#1d5e2a" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>
       <span>หมอข้าว</span>
@@ -193,6 +226,25 @@ footer{position:relative;z-index:2;padding:clamp(24px,3.4vh,40px) var(--pad) cal
       <p class="hint">เปิดกล้องมือถือหรืออัปโหลดรูปได้ ไม่ต้องสมัครสมาชิก</p>
     </div>
   </main>
+
+  <!-- ส่วนผู้พัฒนา: รูปที่ assets/me.jpg -->
+  <section class="dev in d6" aria-label="ผู้พัฒนา">
+    <div class="devcard">
+      <div class="photo">
+        <svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 21c0-4.6 3.8-7.5 8.5-7.5s8.5 2.9 8.5 7.5z"/></svg>
+        <img src="assets/me.jpg" alt="นายณิชพน ธนวัตณัชกุล ผู้พัฒนา" onerror="this.remove()">
+      </div>
+      <div class="devtext">
+        <p class="tag">ผู้พัฒนา</p>
+        <h2>นายณิชพน ธนวัตณัชกุล</h2>
+        <p>สาขาวิทยาการคอมพิวเตอร์ คณะวิทยาศาสตร์และเทคโนโลยี<br>มหาวิทยาลัยราชภัฏนครปฐม</p>
+        <a class="btn2" id="paper" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+          อ่านบทความวิจัย
+        </a>
+      </div>
+    </div>
+  </section>
 
   <footer>
     <div class="fgrid">
@@ -212,11 +264,15 @@ footer{position:relative;z-index:2;padding:clamp(24px,3.4vh,40px) var(--pad) cal
   </footer>
 </div>
 <script>
-/* ===== แก้ 2 บรรทัดนี้ก่อนใช้งานจริง ===== */
-var APP_URL="https://riec-app-75ymbaaa6tbfnndb5jtxpo.streamlit.app/";   // ลิงก์แอป Streamlit เช่น https://xxxx.streamlit.app
-var GITHUB_URL="https://github.com/Nichapon-10/RIEC-APP";// ลิงก์ GitHub repo ของโปรเจกต์
+/* ===== แก้ 3 บรรทัดนี้ก่อนใช้งานจริง ===== */
+var APP_URL="https://riec-app-75ymbaaa6tbfnndb5jtxpo.streamlit.app/";   // ลิงก์แอป Streamlit
+var GITHUB_URL="https://github.com/Nichapon-10/RIEC-APP";               // ลิงก์ GitHub repo ของโปรเจกต์
+var PAPER_URL="assets/paper.pdf";  // เอกสารที่ส่งตีพิมพ์: ไฟล์ PDF ใน repo หรือลิงก์วารสาร/DOI (ปล่อยว่างไว้ = ซ่อนปุ่ม)
+
 document.getElementById('cta').href=APP_URL;
 document.getElementById('gh').href=GITHUB_URL;
+var paperBtn=document.getElementById('paper');
+if(PAPER_URL){paperBtn.href=PAPER_URL}else{paperBtn.style.display='none'}
 var v=document.getElementById('bgv');
 v.addEventListener('canplay',function(){v.classList.add('ready')});
 v.addEventListener('error',function(){v.remove()},true);
