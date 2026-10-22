@@ -208,8 +208,8 @@ footer{position:relative;z-index:2;padding:clamp(24px,3.4vh,40px) var(--pad) cal
 
     <!-- โลโก้มหาวิทยาลัยและสาขา: วางไฟล์ไว้ที่ assets/logo-university.png และ assets/logo-cs.png -->
     <div class="logos in d0">
-      <img src="assets/logo-university.png" alt="ตราสัญลักษณ์มหาวิทยาลัยราชภัฏนครปฐม" onerror="this.remove()">
-      <img src="assets/logo-cs.png" alt="โลโก้สาขาวิทยาการคอมพิวเตอร์ มหาวิทยาลัยราชภัฏนครปฐม" onerror="this.remove()">
+      <img data-base="assets/logo-university" alt="ตราสัญลักษณ์มหาวิทยาลัยราชภัฏนครปฐม">
+      <img data-base="assets/logo-cs" alt="โลโก้สาขาวิทยาการคอมพิวเตอร์ มหาวิทยาลัยราชภัฏนครปฐม">
     </div>
 
     <div class="brandtop in d1">
@@ -273,6 +273,12 @@ document.getElementById('cta').href=APP_URL;
 document.getElementById('gh').href=GITHUB_URL;
 var paperBtn=document.getElementById('paper');
 if(PAPER_URL){paperBtn.href=PAPER_URL}else{paperBtn.style.display='none'}
+/* โลโก้: ลองนามสกุลไฟล์ให้อัตโนมัติ (jpg, jpeg, png, webp) ไม่เจอก็ซ่อนรูป */
+document.querySelectorAll('.logos img[data-base]').forEach(function(img){
+  var exts=['jpg','jpeg','png','webp','JPG','JPEG','PNG'],i=0,base=img.getAttribute('data-base');
+  function next(){ if(i>=exts.length){img.remove();return} img.src=base+'.'+exts[i++]; }
+  img.onerror=next; next();
+});
 var v=document.getElementById('bgv');
 v.addEventListener('canplay',function(){v.classList.add('ready')});
 v.addEventListener('error',function(){v.remove()},true);
